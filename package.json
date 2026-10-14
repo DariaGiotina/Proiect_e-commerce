@@ -1,0 +1,42 @@
+{
+  "name": "blush-and-bow",
+  "version": "1.0.0",
+  "description": "Blush & Bow — online shop (e-commerce course project)",
+  "scripts": {
+    "dev": "node --watch --env-file=.env server.js",
+    "start": "node --env-file=.env server.js",
+    "test": "node --test",
+    "seed": "node --env-file=.env scripts/seed.js",
+    "db:reset": "node --env-file=.env scripts/reset-db.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DariaGiotina/Proiect_e-commerce.git"
+  },
+  "keywords": [],
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/DariaGiotina/Proiect_e-commerce/issues"
+  },
+  "homepage": "https://github.com/DariaGiotina/Proiect_e-commerce#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.0.3",
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "multer": "^2.5.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.1"
+  },
+  "allowScripts": {
+    "better-sqlite3": false
+  },
+  "private": true,
+  "engines": {
+    "node": ">=24"
+  }
+}
