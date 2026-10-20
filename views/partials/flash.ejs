@@ -1,0 +1,9 @@
+<% if (flash.length > 0) { %>
+  <div class="container flash-area" role="status">
+    <% for (const item of flash) { %>
+      <p class="flash flash--<%= item.type %>">
+        <%= item.message %><% if (item.type === 'success' && !item.message.includes('✨')) { %> ✨<% } %>
+      </p>
+    <% } %>
+  </div>
+<% } %>

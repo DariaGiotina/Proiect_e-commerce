@@ -1,0 +1,29 @@
+:root {
+  /* surfaces */
+  --blush-50:  #FFF5F8;   /* page background */
+  --blush-100: #FFE8F0;   /* soft fills, table stripes */
+  --pink-200:  #FFD1E1;   /* borders, chips */
+  --pink-300:  #FFB3CB;   /* hover fills, gingham */
+  --pink-400:  #FF8FB4;   /* decoration only — never text */
+  --lavender-200: #E7D9F5;
+  --white: #FFFFFF;
+  /* text & actions */
+  --rose-600: #D63E77;    /* icons / large text only (4.1:1) */
+  --rose-700: #B83268;    /* primary buttons, links (5.3:1 on blush-50, 5.7:1 with white text) */
+  --rose-800: #8F2350;    /* hover / pressed */
+  --plum-900: #4A1D3A;    /* body text */
+  --plum-600: #7A4A66;    /* muted text (6.5:1) */
+  /* feedback */
+  --mint-200: #CFF0DD;   --mint-800: #1E6B45;     /* success */
+  --butter-200: #FFF1C9; --butter-800: #7A5A00;   /* warning */
+  --cherry-100: #FFE1E1; --cherry-700: #B42318;   /* error */
+  /* shape */
+  --radius-sm: 10px; --radius-md: 16px; --radius-lg: 24px; --radius-pill: 999px;
+  --shadow-soft: 0 6px 20px rgba(184, 50, 104, 0.12);
+  --shadow-lift: 0 12px 32px rgba(184, 50, 104, 0.20);
+  --focus-ring: 0 0 0 3px var(--white), 0 0 0 6px var(--rose-700);
+  /* type */
+  --font-logo: "Pacifico", cursive;
+  --font-heading: "Fredoka", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+}

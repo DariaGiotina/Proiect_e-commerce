@@ -4,16 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= typeof title !== 'undefined' ? title + ' · ' : '' %>Blush & Bow 🎀</title>
+  <link rel="icon" href="/img/bow.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&family=Pacifico&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script src="/js/main.js" defer></script>
 </head>
 <body>
-  <header>
-    <a href="/">Blush &amp; Bow 🎀</a>
-  </header>
-  <main>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <%- include('partials/header') %>
+  <%- include('partials/flash') %>
+  <main id="main" class="container">
     <%- body %>
   </main>
-  <footer>
-    <p>© <%= new Date().getFullYear() %> Blush &amp; Bow</p>
-  </footer>
+  <%- include('partials/footer') %>
 </body>
 </html>

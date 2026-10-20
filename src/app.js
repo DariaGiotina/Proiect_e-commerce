@@ -4,6 +4,9 @@ import expressLayouts from 'express-ejs-layouts';
 import session from 'express-session';
 import helmet from 'helmet';
 import { createRouter } from './routes/index.js';
+import { flashMiddleware } from './middleware/flash.js';
+import { notFound, errorHandler } from './middleware/errors.js';
+import { formatPrice } from './utils/money.js';
 
 const ROOT_DIR = path.resolve(import.meta.dirname, '..');
 
@@ -14,6 +17,7 @@ export function createApp({ db, sessionSecret, uploadsDir }) {
   app.set('views', path.join(ROOT_DIR, 'views'));
   app.set('layout', 'layout');
   app.set('db', db);
+  app.locals.formatPrice = formatPrice;
 
   app.use(
     helmet({
@@ -38,8 +42,20 @@ export function createApp({ db, sessionSecret, uploadsDir }) {
     }),
   );
   app.use(expressLayouts);
+  app.use(flashMiddleware);
+  app.use((req, res, next) => {
+    res.locals.currentUser = null;
+    res.locals.cartCount = 0;
+    res.locals.wishlistCount = 0;
+    res.locals.currentPath = req.path;
+    res.locals.searchQuery = typeof req.query.q === 'string' ? req.query.q : '';
+    next();
+  });
 
-  app.use(createRouter({ db }));
+  app.use(createRouter({ db, uploadsDir }));
+
+  app.use(notFound);
+  app.use(errorHandler);
 
   return app;
 }

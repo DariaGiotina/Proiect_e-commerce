@@ -1,0 +1,33 @@
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="logo" href="/">Blush &amp; Bow <span aria-hidden="true">🎀</span></a>
+
+    <form class="search" action="/products" method="get" role="search">
+      <label class="visually-hidden" for="site-search">Search products</label>
+      <input id="site-search" type="search" name="q" value="<%= searchQuery %>" placeholder="Search cute things…">
+      <button type="submit" aria-label="Search">🔍</button>
+    </form>
+
+    <nav class="site-nav" aria-label="Main">
+      <a href="/products" <%- currentPath.startsWith('/products') ? 'aria-current="page"' : '' %>>Shop</a>
+      <% if (currentUser) { %>
+        <span class="site-nav__hello">Hi, <%= currentUser.name %></span>
+        <% if (currentUser.role === 'admin') { %>
+          <a href="/admin" <%- currentPath.startsWith('/admin') ? 'aria-current="page"' : '' %>>Admin</a>
+        <% } %>
+        <form action="/logout" method="post" class="inline-form">
+          <button type="submit" class="link-button">Log out</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Log in</a>
+        <a href="/register">Sign up</a>
+      <% } %>
+      <a class="icon-link" href="/wishlist" aria-label="Wishlist, <%= wishlistCount %> items">
+        <span aria-hidden="true">♡</span><span class="count"><%= wishlistCount %></span>
+      </a>
+      <a class="icon-link" href="/cart" aria-label="Cart, <%= cartCount %> items">
+        <span aria-hidden="true">👜</span><span class="badge"><%= cartCount %></span>
+      </a>
+    </nav>
+  </div>
+</header>
