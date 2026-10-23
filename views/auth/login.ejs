@@ -1,0 +1,26 @@
+<section class="form-narrow">
+  <div class="form-card">
+    <h1>Welcome back 💗</h1>
+    <p class="muted">Log in to see your cart, wishlist and orders.</p>
+
+    <% if (error) { %>
+      <p class="form-error" role="alert">⚠️ <%= error %></p>
+    <% } %>
+
+    <form action="/login" method="post" novalidate>
+      <input type="hidden" name="next" value="<%= next %>">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" value="<%= values.email %>" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" autocomplete="current-password" required>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Log in</button>
+        <span class="muted">New here? <a href="/register">Create an account</a></span>
+      </div>
+    </form>
+  </div>
+</section>

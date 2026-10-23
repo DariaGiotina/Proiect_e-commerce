@@ -1,0 +1,29 @@
+<section class="form-narrow">
+  <div class="form-card">
+    <h1>Create your account 🎀</h1>
+    <p class="muted">It only takes a minute.</p>
+
+    <form action="/register" method="post" novalidate>
+      <% const fields = [
+        { name: 'name', label: 'Name', type: 'text', autocomplete: 'name' },
+        { name: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
+        { name: 'password', label: 'Password (at least 8 characters)', type: 'password', autocomplete: 'new-password' },
+        { name: 'passwordConfirm', label: 'Confirm password', type: 'password', autocomplete: 'new-password' },
+      ]; %>
+      <% for (const f of fields) { %>
+        <div class="field">
+          <label for="<%= f.name %>"><%= f.label %></label>
+          <input id="<%= f.name %>" type="<%= f.type %>" name="<%= f.name %>"
+            value="<%= f.type === 'password' ? '' : (values[f.name] ?? '') %>"
+            autocomplete="<%= f.autocomplete %>" required
+            <% if (errors[f.name]) { %>aria-invalid="true" aria-describedby="<%= f.name %>-error"<% } %>>
+          <%- include('../partials/field-error', { field: f.name, errors }) %>
+        </div>
+      <% } %>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Sign up</button>
+        <span class="muted">Already have an account? <a href="/login">Log in</a></span>
+      </div>
+    </form>
+  </div>
+</section>
