@@ -1,4 +1,7 @@
-<section>
-  <h1>Admin dashboard 🎀</h1>
-  <p class="muted">Hi, <%= currentUser.name %>! Shop management tools will appear here.</p>
-</section>
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <section class="admin-main">
+    <h1>Admin dashboard 🎀</h1>
+    <p class="muted">Hi, <%= currentUser.name %>! Pick a section on the left to manage the shop.</p>
+  </section>
+</div>

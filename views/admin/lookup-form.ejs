@@ -1,0 +1,33 @@
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <section class="admin-main">
+    <p><a href="<%= config.basePath %>">← Back to <%= config.title.toLowerCase() %></a></p>
+    <div class="form-card form-medium">
+      <h1><span aria-hidden="true"><%= config.emoji %></span> <%= title %></h1>
+      <form action="<%= action %>" method="post" novalidate>
+        <% for (const f of config.fields) { %>
+          <% const invalid = Boolean(errors[f.name]); %>
+          <div class="field">
+            <label for="<%= f.name %>"><%= f.label %><% if (!f.required) { %> <span class="muted">(optional)</span><% } %></label>
+            <% if (f.type === 'textarea') { %>
+              <textarea id="<%= f.name %>" name="<%= f.name %>"
+                <% if (invalid) { %>aria-invalid="true" aria-describedby="<%= f.name %>-error"<% } %>><%= values[f.name] %></textarea>
+            <% } else { %>
+              <input id="<%= f.name %>" name="<%= f.name %>" value="<%= values[f.name] %>"
+                type="<%= f.type === 'email' ? 'email' : 'text' %>"
+                <% if (f.type === 'money') { %>inputmode="decimal" placeholder="15.99"<% } %>
+                <% if (f.type === 'emoji') { %>placeholder="🎀" class="input-emoji"<% } %>
+                <% if (f.required) { %>required<% } %>
+                <% if (invalid) { %>aria-invalid="true" aria-describedby="<%= f.name %>-error"<% } %>>
+            <% } %>
+            <%- include('../partials/field-error', { field: f.name, errors }) %>
+          </div>
+        <% } %>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Save</button>
+          <a class="btn btn-ghost" href="<%= config.basePath %>">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

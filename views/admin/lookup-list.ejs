@@ -1,0 +1,45 @@
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <section class="admin-main">
+    <div class="section-head">
+      <h1><span aria-hidden="true"><%= config.emoji %></span> <%= config.title %></h1>
+      <a class="btn btn-primary" href="<%= config.basePath %>/new">+ New <%= config.singular.toLowerCase() %></a>
+    </div>
+
+    <% if (rows.length === 0) { %>
+      <div class="empty-state">
+        <p class="empty-state__emoji" aria-hidden="true">🌸</p>
+        <p class="empty-state__text">Nothing here yet.</p>
+      </div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <% for (const col of columns) { %><th scope="col"><%= col.label %></th><% } %>
+              <th scope="col">Products</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const row of rows) { %>
+              <tr>
+                <% for (const col of columns) { %>
+                  <td><%= col.type === 'money' ? formatPrice(row[col.name]) : row[col.name] %></td>
+                <% } %>
+                <td><%= row.productCount %></td>
+                <td class="admin-table__actions">
+                  <a class="btn btn-soft btn-sm" href="<%= config.basePath %>/<%= row.id %>/edit">✏️ Edit</a>
+                  <form action="<%= config.basePath %>/<%= row.id %>/delete" method="post" class="inline-form"
+                    data-confirm="Are you sure you want to delete “<%= row.name %>”?">
+                    <button class="btn btn-danger btn-sm" type="submit">🗑️ Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</div>

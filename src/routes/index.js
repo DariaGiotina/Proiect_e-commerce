@@ -2,7 +2,9 @@ import { Router } from 'express';
 import * as homeController from '../controllers/homeController.js';
 import * as adminDashboardController from '../controllers/adminDashboardController.js';
 import { createAuthController } from '../controllers/authController.js';
+import { createLookupController, mountLookupRoutes } from '../controllers/adminLookupController.js';
 import { loadCurrentUser, requireAdmin } from '../middleware/auth.js';
+import { LOOKUP_CONFIGS } from './adminLookups.js';
 
 export function createRouter({ db, uploadsDir }) {
   const router = Router();
@@ -21,6 +23,9 @@ export function createRouter({ db, uploadsDir }) {
   const admin = Router();
   admin.use(requireAdmin);
   admin.get('/', adminDashboardController.show);
+  for (const config of LOOKUP_CONFIGS) {
+    mountLookupRoutes(admin, createLookupController(db, config), config.basePath);
+  }
   router.use('/admin', admin);
 
   return router;
