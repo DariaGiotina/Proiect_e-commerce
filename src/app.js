@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { createRouter } from './routes/index.js';
 import { flashMiddleware } from './middleware/flash.js';
 import { notFound, errorHandler } from './middleware/errors.js';
+import { requireSameOrigin } from './middleware/sameOrigin.js';
 import { formatPrice } from './utils/money.js';
 
 const ROOT_DIR = path.resolve(import.meta.dirname, '..');
@@ -51,6 +52,7 @@ export function createApp({ db, sessionSecret, uploadsDir }) {
     res.locals.searchQuery = typeof req.query.q === 'string' ? req.query.q : '';
     next();
   });
+  app.use(requireSameOrigin);
 
   app.use(createRouter({ db, uploadsDir }));
 
