@@ -1,0 +1,117 @@
+<%
+  const invalid = (field) => errors[field] ? `aria-invalid="true" aria-describedby="${field}-error"` : '';
+%>
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <section class="admin-main">
+    <p><a href="/admin/products">← Back to products</a></p>
+    <h1><span aria-hidden="true">🛍️</span> <%= title %></h1>
+
+    <% if (Object.keys(errors).length > 0) { %>
+      <p class="form-error" role="alert">⚠️ Please fix the highlighted fields.</p>
+    <% } %>
+
+    <form class="product-form" action="<%= action %>" method="post" enctype="multipart/form-data" novalidate>
+      <div class="form-card">
+        <h2>Basic info</h2>
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" value="<%= values.name %>" required <%- invalid('name') %>>
+          <%- include('../partials/field-error', { field: 'name', errors }) %>
+        </div>
+        <div class="field">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" required <%- invalid('description') %>><%= values.description %></textarea>
+          <%- include('../partials/field-error', { field: 'description', errors }) %>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h2>Price &amp; stock</h2>
+        <div class="field-row">
+          <div class="field">
+            <label for="price">Price (RON)</label>
+            <input id="price" name="price" value="<%= values.price %>" inputmode="decimal" placeholder="49.99" required <%- invalid('price') %>>
+            <%- include('../partials/field-error', { field: 'price', errors }) %>
+          </div>
+          <div class="field">
+            <label for="stock">Stock</label>
+            <input id="stock" name="stock" value="<%= values.stock %>" inputmode="numeric" placeholder="10" required <%- invalid('stock') %>>
+            <%- include('../partials/field-error', { field: 'stock', errors }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h2>Category &amp; supplier</h2>
+        <div class="field-row">
+          <div class="field">
+            <label for="categoryId">Category</label>
+            <select id="categoryId" name="categoryId" required <%- invalid('categoryId') %>>
+              <option value="">Choose…</option>
+              <% for (const c of categories) { %>
+                <option value="<%= c.id %>" <%= values.categoryId === c.id ? 'selected' : '' %>><%= c.emoji %> <%= c.name %></option>
+              <% } %>
+            </select>
+            <%- include('../partials/field-error', { field: 'categoryId', errors }) %>
+          </div>
+          <div class="field">
+            <label for="supplierId">Supplier</label>
+            <select id="supplierId" name="supplierId" required <%- invalid('supplierId') %>>
+              <option value="">Choose…</option>
+              <% for (const s of suppliers) { %>
+                <option value="<%= s.id %>" <%= values.supplierId === s.id ? 'selected' : '' %>><%= s.name %></option>
+              <% } %>
+            </select>
+            <%- include('../partials/field-error', { field: 'supplierId', errors }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <fieldset class="field" <%- errors.deliveryMethodIds ? 'aria-describedby="deliveryMethodIds-error"' : '' %>>
+          <legend><h2>Delivery</h2></legend>
+          <% for (const d of deliveryMethods) { %>
+            <label class="checkbox-row">
+              <input type="checkbox" name="deliveryMethodIds" value="<%= d.id %>"
+                <%= values.deliveryMethodIds.includes(d.id) ? 'checked' : '' %>>
+              <%= d.name %> <span class="muted">· <%= formatPrice(d.priceCents) %> · <%= d.eta %></span>
+            </label>
+          <% } %>
+          <%- include('../partials/field-error', { field: 'deliveryMethodIds', errors }) %>
+        </fieldset>
+      </div>
+
+      <div class="form-card">
+        <h2>Specifications</h2>
+        <div class="field">
+          <label for="specs">One per line, as <em>Key: Value</em> <span class="muted">(optional)</span></label>
+          <textarea id="specs" name="specs" placeholder="Material: satin" <%- invalid('specs') %>><%= values.specs %></textarea>
+          <%- include('../partials/field-error', { field: 'specs', errors }) %>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h2>Image</h2>
+        <div class="image-field">
+          <% if (product?.imagePath) { %>
+            <img class="image-field__preview" data-image-preview src="<%= product.imagePath %>" alt="Current image">
+          <% } else { %>
+            <img class="image-field__preview" data-image-preview alt="Selected image preview" hidden>
+          <% } %>
+          <div class="field">
+            <label for="image"><%= product?.imagePath ? 'Replace image' : 'Upload an image' %> <span class="muted">(optional)</span></label>
+            <input id="image" type="file" name="image" accept="image/jpeg,image/png,image/webp" data-preview-input <%- invalid('image') %>>
+            <p class="field-hint">JPG, PNG or WEBP, max 2 MB.<% if (product?.imagePath) { %> Leave empty to keep the current image.<% } %></p>
+            <%- include('../partials/field-error', { field: 'image', errors }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary btn-lg" type="submit">Save product</button>
+        <a class="btn btn-ghost" href="/admin/products">Cancel</a>
+      </div>
+    </form>
+  </section>
+</div>

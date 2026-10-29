@@ -168,3 +168,48 @@
     font-size: 0.9rem;
   }
 }
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 760px;
+}
+
+.product-form h2 {
+  font-size: 1.15rem;
+  color: var(--rose-700);
+}
+
+.product-form legend h2 {
+  margin-bottom: 0.5rem;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0 1rem;
+}
+
+.image-field {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.image-field .field {
+  flex: 1 1 240px;
+}
+
+.image-field__preview {
+  width: 160px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+}
+
+.image-field__preview[hidden] {
+  display: none;
+}

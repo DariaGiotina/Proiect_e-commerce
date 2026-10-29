@@ -3,7 +3,9 @@ import * as homeController from '../controllers/homeController.js';
 import * as adminDashboardController from '../controllers/adminDashboardController.js';
 import { createAuthController } from '../controllers/authController.js';
 import { createLookupController, mountLookupRoutes } from '../controllers/adminLookupController.js';
+import { createAdminProductController } from '../controllers/adminProductController.js';
 import { loadCurrentUser, requireAdmin } from '../middleware/auth.js';
+import { createProductImageUpload } from '../middleware/upload.js';
 import { LOOKUP_CONFIGS } from './adminLookups.js';
 
 export function createRouter({ db, uploadsDir }) {
@@ -26,6 +28,14 @@ export function createRouter({ db, uploadsDir }) {
   for (const config of LOOKUP_CONFIGS) {
     mountLookupRoutes(admin, createLookupController(db, config), config.basePath);
   }
+  const products = createAdminProductController(db, uploadsDir);
+  const productImageUpload = createProductImageUpload(uploadsDir);
+  admin.get('/products', products.list);
+  admin.get('/products/new', products.newForm);
+  admin.post('/products', productImageUpload, products.create);
+  admin.get('/products/:id/edit', products.editForm);
+  admin.post('/products/:id', productImageUpload, products.update);
+  admin.post('/products/:id/delete', products.remove);
   router.use('/admin', admin);
 
   return router;

@@ -1,0 +1,63 @@
+<div class="admin-shell">
+  <%- include('../partials/admin-sidebar') %>
+  <section class="admin-main">
+    <div class="section-head">
+      <h1><span aria-hidden="true">🛍️</span> Products</h1>
+      <a class="btn btn-primary" href="/admin/products/new">+ New product</a>
+    </div>
+
+    <% if (products.length === 0) { %>
+      <div class="empty-state">
+        <p class="empty-state__emoji" aria-hidden="true">🌸</p>
+        <p class="empty-state__text">No products yet. Add the first one!</p>
+      </div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th scope="col"><span class="visually-hidden">Image</span></th>
+              <th scope="col">Name</th>
+              <th scope="col">Category</th>
+              <th scope="col">Price</th>
+              <th scope="col">Stock</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const p of products) { %>
+              <tr>
+                <td>
+                  <% if (p.imagePath) { %>
+                    <img class="admin-thumb" src="<%= p.imagePath %>" alt="" loading="lazy">
+                  <% } else { %>
+                    <span class="admin-thumb admin-thumb--emoji" aria-hidden="true"><%= p.categoryEmoji %></span>
+                  <% } %>
+                </td>
+                <td><a href="/products/<%= p.slug %>"><%= p.name %></a></td>
+                <td><%= p.categoryName %></td>
+                <td><%= formatPrice(p.priceCents) %></td>
+                <td>
+                  <% if (p.stock === 0) { %>
+                    <span class="pill pill--cherry">Out of stock</span>
+                  <% } else if (p.stock < lowStock) { %>
+                    <span class="pill pill--butter">⚠️ <%= p.stock %> left</span>
+                  <% } else { %>
+                    <%= p.stock %>
+                  <% } %>
+                </td>
+                <td class="admin-table__actions">
+                  <a class="btn btn-soft btn-sm" href="/admin/products/<%= p.id %>/edit">✏️ Edit</a>
+                  <form action="/admin/products/<%= p.id %>/delete" method="post" class="inline-form"
+                    data-confirm="Are you sure you want to delete “<%= p.name %>”?">
+                    <button class="btn btn-danger btn-sm" type="submit">🗑️ Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</div>

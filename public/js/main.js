@@ -5,3 +5,18 @@ document.addEventListener('submit', (event) => {
     event.preventDefault();
   }
 });
+
+// Shows a preview of the image picked in the admin product form.
+document.addEventListener('change', (event) => {
+  const input = event.target;
+  if (!input.matches?.('[data-preview-input]')) return;
+  const preview = input.closest('form')?.querySelector('[data-image-preview]');
+  const file = input.files?.[0];
+  if (!preview || !file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.addEventListener('load', () => {
+    preview.src = reader.result;
+    preview.hidden = false;
+  });
+  reader.readAsDataURL(file);
+});
