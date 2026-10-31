@@ -1,0 +1,57 @@
+<section>
+  <div class="section-head">
+    <h1>
+      <% if (category) { %><span aria-hidden="true"><%= category.emoji %></span> <%= category.name %>
+      <% } else if (q) { %>Results for “<%= q %>”
+      <% } else { %>All products<% } %>
+    </h1>
+    <p class="muted"><%= result.total %> <%= result.total === 1 ? 'product' : 'products' %></p>
+  </div>
+  <% if (category && category.description) { %>
+    <p class="muted"><%= category.description %></p>
+  <% } %>
+
+  <nav class="category-pills" aria-label="Categories">
+    <a class="chip <%= !category ? 'chip--active' : '' %>" href="/products<%= q ? '?q=' + encodeURIComponent(q) : '' %>"
+      <%- !category ? 'aria-current="page"' : '' %>>All</a>
+    <% for (const c of categories) { %>
+      <% const active = category && category.id === c.id; %>
+      <a class="chip <%= active ? 'chip--active' : '' %>" href="/products?category=<%= c.slug %>"
+        <%- active ? 'aria-current="page"' : '' %>>
+        <span aria-hidden="true"><%= c.emoji %></span> <%= c.name %>
+      </a>
+    <% } %>
+  </nav>
+
+  <form class="catalog-filters" action="/products" method="get">
+    <% if (category) { %><input type="hidden" name="category" value="<%= category.slug %>"><% } %>
+    <div class="field">
+      <label for="catalog-q">Search</label>
+      <input id="catalog-q" type="search" name="q" value="<%= q %>" placeholder="e.g. planner">
+    </div>
+    <div class="field">
+      <label for="catalog-sort">Sort by</label>
+      <select id="catalog-sort" name="sort">
+        <% for (const [value, label] of Object.entries(sortLabels)) { %>
+          <option value="<%= value %>" <%= sort === value ? 'selected' : '' %>><%= label %></option>
+        <% } %>
+      </select>
+    </div>
+    <button class="btn btn-primary" type="submit">Apply</button>
+  </form>
+
+  <% if (result.items.length === 0) { %>
+    <div class="empty-state">
+      <p class="empty-state__emoji" aria-hidden="true">🔍</p>
+      <p class="empty-state__text">No products found… try another search 💗</p>
+      <a class="btn btn-soft" href="/products">See all products</a>
+    </div>
+  <% } else { %>
+    <ul class="product-grid">
+      <% for (const product of result.items) { %>
+        <li><%- include('../partials/product-card', { product }) %></li>
+      <% } %>
+    </ul>
+    <%- include('../partials/pagination') %>
+  <% } %>
+</section>

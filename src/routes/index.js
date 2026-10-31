@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import * as homeController from '../controllers/homeController.js';
+import { createHomeController } from '../controllers/homeController.js';
+import { createCatalogController } from '../controllers/catalogController.js';
 import * as adminDashboardController from '../controllers/adminDashboardController.js';
 import { createAuthController } from '../controllers/authController.js';
 import { createLookupController, mountLookupRoutes } from '../controllers/adminLookupController.js';
@@ -11,10 +12,14 @@ import { LOOKUP_CONFIGS } from './adminLookups.js';
 export function createRouter({ db, uploadsDir }) {
   const router = Router();
   const auth = createAuthController(db);
+  const home = createHomeController(db);
+  const catalog = createCatalogController(db);
 
   router.use(loadCurrentUser(db));
 
-  router.get('/', homeController.show);
+  router.get('/', home.show);
+  router.get('/products', catalog.list);
+  router.get('/products/:slug', catalog.show);
 
   router.get('/login', auth.loginForm);
   router.post('/login', auth.login);

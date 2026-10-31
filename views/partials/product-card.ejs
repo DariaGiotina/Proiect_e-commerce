@@ -1,0 +1,18 @@
+<article class="product-card">
+  <a class="product-card__link" href="/products/<%= product.slug %>">
+    <% if (product.imagePath) { %>
+      <img class="product-image" src="<%= product.imagePath %>" alt="<%= product.name %>" loading="lazy">
+    <% } else { %>
+      <span class="product-placeholder" aria-hidden="true"><%= product.category.emoji %></span>
+    <% } %>
+    <h3 class="product-card__name"><%= product.name %></h3>
+    <span class="product-card__meta">
+      <span class="price"><%= formatPrice(product.priceCents) %></span>
+      <% if (product.stock === 0) { %>
+        <span class="pill pill--cherry">Out of stock</span>
+      <% } else if (product.stock < 5) { %>
+        <span class="pill pill--butter">Only <%= product.stock %> left</span>
+      <% } %>
+    </span>
+  </a>
+</article>

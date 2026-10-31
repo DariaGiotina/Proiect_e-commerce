@@ -106,6 +106,10 @@ textarea {
   color: var(--plum-600);
 }
 
+.text-center {
+  text-align: center;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

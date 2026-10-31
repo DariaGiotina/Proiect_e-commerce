@@ -7,3 +7,38 @@
   </div>
   <img class="hero__wave" src="/img/wave.svg" alt="">
 </section>
+
+<% if (categories.length > 0) { %>
+  <section class="section" aria-labelledby="categories-title">
+    <h2 id="categories-title" class="text-center">Shop by category</h2>
+    <ul class="category-bubbles">
+      <% for (const c of categories) { %>
+        <li>
+          <a class="category-bubble" href="/products?category=<%= c.slug %>">
+            <span class="category-bubble__emoji" aria-hidden="true"><%= c.emoji %></span>
+            <span class="category-bubble__name"><%= c.name %></span>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  </section>
+<% } %>
+
+<section class="section" aria-labelledby="new-title">
+  <div class="section-head">
+    <h2 id="new-title">New arrivals ✨</h2>
+    <a href="/products">See everything →</a>
+  </div>
+  <% if (newArrivals.length === 0) { %>
+    <div class="empty-state">
+      <p class="empty-state__emoji" aria-hidden="true">🌸</p>
+      <p class="empty-state__text">New cute things are on their way!</p>
+    </div>
+  <% } else { %>
+    <ul class="product-grid">
+      <% for (const product of newArrivals) { %>
+        <li><%- include('partials/product-card', { product }) %></li>
+      <% } %>
+    </ul>
+  <% } %>
+</section>

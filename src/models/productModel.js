@@ -126,3 +126,62 @@ export function listProductsForAdmin(db) {
     )
     .all();
 }
+
+const SORTS = {
+  newest: 'p.created_at DESC, p.id DESC',
+  price_asc: 'p.price_cents ASC, p.id ASC',
+  price_desc: 'p.price_cents DESC, p.id DESC',
+  name: 'p.name COLLATE NOCASE ASC, p.id ASC',
+};
+
+export const SORT_OPTIONS = Object.keys(SORTS);
+
+// LIKE treats % and _ as wildcards; escaping them makes the search literal.
+function escapeLike(text) {
+  return text.replace(/[\\%_]/g, (ch) => `\\${ch}`);
+}
+
+export function listProducts(db, { categorySlug, q, sort = 'newest', page = 1, perPage = 12 } = {}) {
+  const where = [];
+  const params = [];
+  if (categorySlug) {
+    where.push('c.slug = ?');
+    params.push(categorySlug);
+  }
+  const search = normalizeForSearch(q ?? '');
+  if (search) {
+    where.push("p.search_text LIKE '%' || ? || '%' ESCAPE '\\'");
+    params.push(escapeLike(search));
+  }
+  const whereSql = where.length > 0 ? `WHERE ${where.join(' AND ')}` : '';
+  const from = 'FROM products p JOIN categories c ON c.id = p.category_id';
+
+  const total = db.prepare(`SELECT COUNT(*) ${from} ${whereSql}`).pluck().get(...params);
+  const pages = Math.max(1, Math.ceil(total / perPage));
+  const current = Math.min(Math.max(1, Math.trunc(page) || 1), pages);
+
+  const rows = db
+    .prepare(
+      `SELECT p.id, p.name, p.slug, p.price_cents, p.stock, p.image_path,
+              c.name AS category_name, c.slug AS category_slug, c.emoji AS category_emoji
+       ${from} ${whereSql}
+       ORDER BY ${SORTS[sort] ?? SORTS.newest}
+       LIMIT ? OFFSET ?`,
+    )
+    .all(...params, perPage, (current - 1) * perPage);
+
+  return {
+    items: rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      slug: r.slug,
+      priceCents: r.price_cents,
+      stock: r.stock,
+      imagePath: r.image_path,
+      category: { name: r.category_name, slug: r.category_slug, emoji: r.category_emoji },
+    })),
+    total,
+    page: current,
+    pages,
+  };
+}
