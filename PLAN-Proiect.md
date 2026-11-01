@@ -142,8 +142,25 @@ Verified on this machine: better-sqlite3 13.0.3 loads on Node 24.19 using the Wi
 
 **Components:**
 - **Header:** white and sticky. Logo "Blush & Bow 🎀" in Pacifico, then nav links, a pill-shaped search box, a ♡ wishlist link with a count, and a 👜 cart link with a count badge in `--rose-700`.
-- **Hero (home):** gingham background (two `repeating-linear-gradient`s in `--pink-300` at 25% opacity, 12 px stripes). Fredoka heading "Cute things for pink days", a pill CTA "Shop the collection", and a wavy SVG divider underneath.
-- **Product card:** white, `--radius-lg`, `--shadow-soft`. A 4:3 image with `--radius-md`. When there's no image, show a placeholder: a `linear-gradient(135deg, var(--pink-200), var(--lavender-200))` tile with the category emoji at 64 px. Below it: the name, the price in bold `--rose-700`, and a ♡ toggle in the top-right corner. On hover the card lifts (`translateY(-4px)` + `--shadow-lift`), except under `prefers-reduced-motion`.
+- **Look and feel: a scrapbook / sticker book.** Photos are polaroids taped to the page, stock warnings are die-cut stickers, and categories sit in scalloped "flower" frames. The hero collage is the one bold element; everything else stays quiet.
+- **Hero (home):** gingham background (two `repeating-linear-gradient`s in `--pink-300` at 25% opacity, 12 px stripes). Two columns (one on mobile, centered):
+  - Left: the bow, then the heading "Cute things for pink days" in bubble-sticker lettering (`--rose-700` Fredoka with a white `text-shadow` outline and a `--pink-300` drop shadow), the lead text, and a pill CTA "Shop the collection".
+  - Right: `images/hero/hero.jpg` in an arch-shaped white frame (top radius 999 px), rotated 2°, with washi tape on top and a scalloped butter sticker "Pay when it arrives 💗".
+  - A wavy SVG divider sits underneath.
+- **Washi tape (`.taped`):** a `::before` strip, 120 × 30 px. It has `--pink-400`/`--pink-200` diagonal stripes, torn ends drawn with `clip-path`, and a −3° rotation. Use it only on the hero photo and the product page photo.
+- **Scalloped shape:** `public/img/scallop.svg` (12 petals), used as a CSS `mask` so the color comes from CSS. A mask also clips shadows, so the white die-cut edge and the shadow go on a wrapper with `filter: drop-shadow(...)`.
+- **Category bubbles (home):** a 116 px scalloped `--pink-200` frame. Inside it, a round photo (`coverImage` = the first product photo in that category) with a white 3 px border, plus the category emoji as a small white sticker in the corner. With no photo, it shows the emoji on white. On hover the frame turns `--pink-300` and spins 30°.
+- **Product card (polaroid):**
+  - White, `--radius-sm`, padded 10 px with 14 px at the bottom, `--shadow-soft`.
+  - A square (1:1) photo with a 6 px radius. When there's no image, show a placeholder: a `linear-gradient(135deg, var(--pink-200), var(--lavender-200))` tile with the category emoji at 64 px.
+  - Below the photo: the name, then the price in bold `--rose-700`. A ♡ toggle goes in the top-right corner of the photo (from Task 9).
+  - On hover or focus the card lifts and tilts (`translateY(-4px) rotate(∓1.5deg)`, alternating between neighbours) with `--shadow-lift`, except under `prefers-reduced-motion`.
+  - Phones (≤ 520 px) get 2 columns.
+- **Stickers (`.sticker`):** a pill with a white 3 px border, rotated −6°, over the top-left corner of the photo. Butter "Only N left" and cherry "Out of stock". Pills are still used everywhere else.
+- **Product page photo:** a taped polaroid (14 px padding, 44 px at the bottom), rotated −1°.
+- **Gift banner (home, after New arrivals):** a lavender panel with white polka dots. On the left, `images/hero/gift.jpg` as a polaroid rotated −3°; on the right, "A little gift for someone sweet" and a "Shop plushies" button.
+- **Section titles (home):** `text-decoration: underline wavy var(--pink-300)`.
+- **Photos:** demo photos live in `public/images/` (committed). Each one is free under the Unsplash License, with credits in `public/images/CREDITS.md`. Product photos are 900 × 900 JPGs named `<product-slug>.jpg`. The footer says "Product photos from Unsplash".
 - **Buttons:** `.btn-primary` (`--rose-700` background, white text, pill shape; `--rose-800` on hover), `.btn-soft` (`--blush-100` background, `--plum-900` text), `.btn-ghost`. Every focusable element uses `box-shadow: var(--focus-ring)`.
 - **Forms:** the label sits above the input. Inputs are white with a 2 px `--pink-200` border and 14 px radius. Errors appear under the field in `--cherry-700`, prefixed with ⚠️ and linked to the input with `aria-describedby`.
 - **Flash messages:** a pill under the header. Success is mint, error is cherry, info is lavender. Add a ✨ on success.
@@ -165,7 +182,7 @@ Verified on this machine: better-sqlite3 13.0.3 loads on Node 24.19 using the Wi
 ├─ .gitignore                    ← node_modules/, .env, data/*.db*, public/uploads/*
 ├─ server.js                     ← reads env, opens DB, createApp(), listen
 ├─ scripts/
-│  ├─ seed.js                    ← migrate + seedDemoData from .env
+│  ├─ seed.js                    ← migrate + seedDemoData from .env + attachDemoImages
 │  └─ reset-db.js                ← delete data/shop.db, then seed
 ├─ src/
 │  ├─ app.js                     ← createApp({ db, sessionSecret, uploadsDir })
@@ -173,7 +190,7 @@ Verified on this machine: better-sqlite3 13.0.3 loads on Node 24.19 using the Wi
 │  │  ├─ connection.js           ← openDb(filename)
 │  │  ├─ schema.sql              ← §6
 │  │  ├─ migrate.js              ← migrate(db)
-│  │  └─ seed.js                 ← seedDemoData(db, accounts)
+│  │  └─ seed.js                 ← seedDemoData(db, accounts), attachDemoImages(db)
 │  ├─ models/                    ← SQL lives ONLY here
 │  │  ├─ userModel.js
 │  │  ├─ categoryModel.js
@@ -223,8 +240,12 @@ Verified on this machine: better-sqlite3 13.0.3 loads on Node 24.19 using the Wi
 ├─ public/
 │  ├─ css/  tokens.css base.css components.css admin.css
 │  ├─ js/   main.js          ← mobile menu, qty steppers, confirm-before-delete
-│  ├─ img/  bow.svg wave.svg
-│  └─ uploads/               ← product images (git-ignored, keep .gitkeep)
+│  ├─ img/  bow.svg wave.svg scallop.svg
+│  ├─ images/                ← demo photos from Unsplash (committed)
+│  │  ├─ products/<slug>.jpg ← one 900×900 photo per demo product
+│  │  ├─ hero/  hero.jpg gift.jpg
+│  │  └─ CREDITS.md          ← photographer + link for every photo
+│  └─ uploads/               ← admin-uploaded product images (git-ignored, keep .gitkeep)
 ├─ data/                      ← shop.db (git-ignored, keep .gitkeep)
 └─ tests/
    ├─ helpers.js
@@ -288,7 +309,7 @@ CREATE TABLE IF NOT EXISTS products (
   stock INTEGER NOT NULL CHECK (stock >= 0),
   category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
   supplier_id INTEGER NOT NULL REFERENCES suppliers(id) ON DELETE RESTRICT,
-  image_path TEXT,                                    -- '/uploads/…' or NULL → emoji placeholder
+  image_path TEXT,                                    -- '/uploads/…' (admin), '/images/products/…' (demo) or NULL → emoji placeholder
   search_text TEXT NOT NULL,                          -- normalizeForSearch(name + ' ' + description)
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -468,7 +489,9 @@ These are the inputs most likely to break the app for a real user that the spec 
   - Categories: Stationery 📒, Hair Accessories 🎀, Beauty 💄, Decor 🕯️, Plushies 🧸, with 4 cute products each.
   - Suppliers: "Pink Atelier Ltd", "Petal Crafts", "Sweet Design".
   - Delivery methods: Standard courier (1599 cents, "2–3 business days"), Express courier (2499, "24 hours"), Locker pickup (999, "1–2 days"). Every product allows at least Standard courier.
-  - Every product has 2–4 specs, stock between 0 and 30 (include one at 0 and one at 2), and `image_path = NULL` so the emoji placeholder shows.
+  - Every product has 2–4 specs, stock between 0 and 30 (include one at 0 and one at 2), and `image_path = '/images/products/<slug>.jpg'` (its demo photo, see §4 "Photos").
+  - `attachDemoImages(db) → { updated }` gives the demo products their photo in a database seeded before the photos existed. It only fills `image_path IS NULL`, so admin uploads are kept. `scripts/seed.js` calls it after `seedDemoData`.
+  - Tests: `every demo product gets a photo that exists in public/images` and `attachDemoImages fills in missing demo photos and keeps uploaded ones`.
 - [x] **Step 5:** Run `npm test`. Expected: PASS. Then run `npm run seed` and open `data/shop.db` in SQLite Viewer.
 - [x] **Step 6: Commit:** `feat: SQLite schema, migration and demo seed`
 
@@ -635,7 +658,7 @@ These are the inputs most likely to break the app for a real user that the spec 
 
 ### Task M1: Milestone 1 — presentation (40% of the project grade)
 
-- [ ] Run `npm run db:reset` for clean demo data, and add a few product photos through the admin form so the shop looks pretty.
+- [ ] Run `npm run db:reset` for clean demo data (it comes with real product photos). Upload one photo through the admin form during the demo to show that the upload works.
 - [ ] Take screenshots of the home, catalog, product page, admin product list, admin product form and the 403 page.
 - [ ] **Slides (6–8)**, in the same pink palette:
   1. Title + "Blush & Bow 🎀"
@@ -816,7 +839,7 @@ These are the inputs most likely to break the app for a real user that the spec 
 
 ### Task M2: Milestone 2 — presentation (60% of the project grade)
 
-- [ ] Run `npm run db:reset`, add product photos, and place 2–3 demo orders with different statuses.
+- [ ] Run `npm run db:reset` and place 2–3 demo orders with different statuses.
 - [ ] **Slides (6–8):** what changed since Milestone 1, the Milestone 2 rows of the §0 table (all ✅), the purchase-flow diagram (cart → checkout → transaction → history), the "How I protect the data" slide (bcrypt, roles, snapshot prices, transaction + stock check, SQL parameters), screenshots, and the test count.
 - [ ] **Live demo script (about 6 minutes):**
   1. Log in as the client → ♡ two products → `/wishlist` → "Move to cart".

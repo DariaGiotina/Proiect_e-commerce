@@ -1,21 +1,37 @@
 <section class="hero full-bleed">
   <div class="container hero__inner">
-    <img class="hero__bow" src="/img/bow.svg" alt="" width="72" height="72">
-    <h1>Cute things for pink days</h1>
-    <p class="hero__lead">Planners, bows, plushies and little treats, picked with love and delivered to your door.</p>
-    <a class="btn btn-primary btn-lg" href="/products">Shop the collection</a>
+    <div class="hero__text">
+      <img class="hero__bow" src="/img/bow.svg" alt="" width="64" height="64">
+      <h1 class="hero__title">Cute things for pink days</h1>
+      <p class="hero__lead">Planners, bows, plushies and little treats, picked with love and delivered to your door.</p>
+      <a class="btn btn-primary btn-lg" href="/products">Shop the collection</a>
+    </div>
+
+    <div class="hero__collage">
+      <figure class="taped hero__photo">
+        <img src="/images/hero/hero.jpg" alt="A pink satin sleep mask, heart earrings and lipstick on pink silk" width="1000" height="1250">
+      </figure>
+      <p class="hero__sticker"><span class="hero__sticker-shape">Pay when it arrives 💗</span></p>
+    </div>
   </div>
   <img class="hero__wave" src="/img/wave.svg" alt="">
 </section>
 
 <% if (categories.length > 0) { %>
   <section class="section" aria-labelledby="categories-title">
-    <h2 id="categories-title" class="text-center">Shop by category</h2>
+    <h2 id="categories-title" class="section-title text-center">Shop by category</h2>
     <ul class="category-bubbles">
       <% for (const c of categories) { %>
         <li>
           <a class="category-bubble" href="/products?category=<%= c.slug %>">
-            <span class="category-bubble__emoji" aria-hidden="true"><%= c.emoji %></span>
+            <span class="category-bubble__frame">
+              <% if (c.coverImage) { %>
+                <img class="category-bubble__photo" src="<%= c.coverImage %>" alt="" loading="lazy">
+                <span class="category-bubble__badge" aria-hidden="true"><%= c.emoji %></span>
+              <% } else { %>
+                <span class="category-bubble__emoji" aria-hidden="true"><%= c.emoji %></span>
+              <% } %>
+            </span>
             <span class="category-bubble__name"><%= c.name %></span>
           </a>
         </li>
@@ -26,8 +42,8 @@
 
 <section class="section" aria-labelledby="new-title">
   <div class="section-head">
-    <h2 id="new-title">New arrivals ✨</h2>
-    <a href="/products">See everything →</a>
+    <h2 id="new-title" class="section-title">New arrivals ✨</h2>
+    <a href="/products">See all products</a>
   </div>
   <% if (newArrivals.length === 0) { %>
     <div class="empty-state">
@@ -41,4 +57,15 @@
       <% } %>
     </ul>
   <% } %>
+</section>
+
+<section class="gift-banner" aria-labelledby="gift-title">
+  <figure class="gift-banner__photo">
+    <img src="/images/hero/gift.jpg" alt="A present wrapped in floral paper with a pink satin bow" width="1200" height="900" loading="lazy">
+  </figure>
+  <div class="gift-banner__text">
+    <h2 id="gift-title">A little gift for someone sweet</h2>
+    <p>Plushies, candles and pocket mirrors that make anyone’s day a bit softer.</p>
+    <a class="btn btn-primary" href="/products?category=plushies">Shop plushies</a>
+  </div>
 </section>

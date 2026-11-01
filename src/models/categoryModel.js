@@ -9,7 +9,10 @@ const MESSAGES = {
 export function listCategories(db) {
   return db
     .prepare(
-      `SELECT c.id, c.name, c.slug, c.emoji, c.description, COUNT(p.id) AS productCount
+      `SELECT c.id, c.name, c.slug, c.emoji, c.description, COUNT(p.id) AS productCount,
+              (SELECT image_path FROM products
+               WHERE category_id = c.id AND image_path IS NOT NULL
+               ORDER BY id LIMIT 1) AS coverImage
        FROM categories c
        LEFT JOIN products p ON p.category_id = c.id
        GROUP BY c.id

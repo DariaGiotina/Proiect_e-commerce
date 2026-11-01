@@ -22,6 +22,7 @@ export function createApp({ db, sessionSecret, uploadsDir }) {
 
   app.use(
     helmet({
+      referrerPolicy: { policy: 'same-origin' },
       contentSecurityPolicy: {
         directives: {
           upgradeInsecureRequests: null,

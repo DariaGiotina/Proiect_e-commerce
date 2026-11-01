@@ -25,6 +25,14 @@ test('an admin POST with a foreign Referer is rejected and changes nothing', asy
   assert.equal(db.prepare("SELECT COUNT(*) FROM categories WHERE name = 'Evil'").pluck().get(), 0);
 });
 
+// With "no-referrer", browsers send "Origin: null" on same-site form posts,
+// which the same-origin check would reject for every real login.
+test('pages let browsers send the real Origin on same-site form posts', async () => {
+  const { guest } = await createTestContext();
+  const res = await guest().get('/login');
+  assert.equal(res.headers['referrer-policy'], 'same-origin');
+});
+
 test('a POST from the same origin is accepted', async () => {
   const { guest } = await createTestContext();
   const agent = guest();

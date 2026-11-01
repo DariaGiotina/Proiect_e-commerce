@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS products (
   stock INTEGER NOT NULL CHECK (stock >= 0),
   category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
   supplier_id INTEGER NOT NULL REFERENCES suppliers(id) ON DELETE RESTRICT,
-  image_path TEXT,                                    -- '/uploads/…' or NULL → emoji placeholder
+  image_path TEXT,                                    -- '/uploads/…' (admin), '/images/products/…' (demo) or NULL → emoji placeholder
   search_text TEXT NOT NULL,                          -- normalizeForSearch(name + ' ' + description)
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))

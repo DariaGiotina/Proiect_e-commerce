@@ -173,6 +173,9 @@ const CATEGORIES = [
 
 const BCRYPT_COST = 10;
 
+// Demo photos live in public/images/products/<slug>.jpg (credits: public/images/CREDITS.md).
+const demoImagePath = (slug) => `/images/products/${slug}.jpg`;
+
 // Does nothing if the shop already has categories, so it is safe to re-run.
 export function seedDemoData(db, { adminEmail, adminPassword, clientEmail, clientPassword }) {
   const hasData = db.prepare('SELECT 1 FROM categories LIMIT 1').get();
@@ -193,7 +196,7 @@ export function seedDemoData(db, { adminEmail, adminPassword, clientEmail, clien
   const insertProduct = db.prepare(
     `INSERT INTO products
        (name, slug, description, specs_json, price_cents, stock, category_id, supplier_id, image_path, search_text)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   );
   const insertProductDelivery = db.prepare(
     'INSERT INTO product_delivery_methods (product_id, delivery_method_id) VALUES (?, ?)',
@@ -226,15 +229,17 @@ export function seedDemoData(db, { adminEmail, adminPassword, clientEmail, clien
 
       for (const p of category.products) {
         const specs = Object.entries(p.specs).map(([key, value]) => ({ key, value }));
+        const slug = slugify(p.name);
         const productId = insertProduct.run(
           p.name,
-          slugify(p.name),
+          slug,
           p.description,
           JSON.stringify(specs),
           p.priceCents,
           p.stock,
           categoryId,
           supplierIds[p.supplier],
+          demoImagePath(slug),
           normalizeForSearch(`${p.name} ${p.description}`),
         ).lastInsertRowid;
         for (const key of p.delivery) {
@@ -245,4 +250,18 @@ export function seedDemoData(db, { adminEmail, adminPassword, clientEmail, clien
   })();
 
   return { created: true };
+}
+
+// Gives the demo products their photo in a database seeded before the photos existed.
+// A product that already has an image (e.g. an admin upload) is left alone.
+export function attachDemoImages(db) {
+  const update = db.prepare('UPDATE products SET image_path = ? WHERE slug = ? AND image_path IS NULL');
+  const slugs = CATEGORIES.flatMap((category) => category.products.map((p) => slugify(p.name)));
+  let updated = 0;
+  db.transaction(() => {
+    for (const slug of slugs) {
+      updated += update.run(demoImagePath(slug), slug).changes;
+    }
+  })();
+  return { updated };
 }

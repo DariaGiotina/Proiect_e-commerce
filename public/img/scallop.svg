@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- A 12-petal scalloped circle. Used as a CSS mask, so the fill colour comes from CSS. -->
+  <g fill="#000">
+    <circle cx="50" cy="50" r="42"/>
+    <circle cx="91" cy="50" r="9"/>
+    <circle cx="85.51" cy="70.5" r="9"/>
+    <circle cx="70.5" cy="85.51" r="9"/>
+    <circle cx="50" cy="91" r="9"/>
+    <circle cx="29.5" cy="85.51" r="9"/>
+    <circle cx="14.49" cy="70.5" r="9"/>
+    <circle cx="9" cy="50" r="9"/>
+    <circle cx="14.49" cy="29.5" r="9"/>
+    <circle cx="29.5" cy="14.49" r="9"/>
+    <circle cx="50" cy="9" r="9"/>
+    <circle cx="70.5" cy="14.49" r="9"/>
+    <circle cx="85.51" cy="29.5" r="9"/>
+  </g>
+</svg>

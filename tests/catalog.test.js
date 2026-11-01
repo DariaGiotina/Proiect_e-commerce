@@ -13,6 +13,13 @@ test('home page shows category bubbles and new arrivals', async () => {
   assert.match(res.text, /Heart Pen/);
 });
 
+test('a category bubble shows a photo of one of its products', async () => {
+  const { guest, db } = await createTestContext();
+  db.prepare("UPDATE products SET image_path = '/images/products/heart-pen.jpg' WHERE name = 'Heart Pen'").run();
+  const res = await guest().get('/');
+  assert.match(res.text, /class="category-bubble__photo" src="\/images\/products\/heart-pen\.jpg"/);
+});
+
 test('the catalog lists every product', async () => {
   const { guest } = await createTestContext();
   const res = await guest().get('/products');

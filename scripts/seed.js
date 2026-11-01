@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { openDb } from '../src/db/connection.js';
 import { migrate } from '../src/db/migrate.js';
-import { seedDemoData } from '../src/db/seed.js';
+import { seedDemoData, attachDemoImages } from '../src/db/seed.js';
 
 const REQUIRED = ['ADMIN_EMAIL', 'ADMIN_PASSWORD', 'DEMO_CLIENT_EMAIL', 'DEMO_CLIENT_PASSWORD'];
 const missing = REQUIRED.filter((name) => !process.env[name]);
@@ -22,10 +22,13 @@ const { created } = seedDemoData(db, {
   clientEmail: process.env.DEMO_CLIENT_EMAIL,
   clientPassword: process.env.DEMO_CLIENT_PASSWORD,
 });
+const { updated } = attachDemoImages(db);
 db.close();
 
-console.log(
-  created
-    ? `Seeded ${dbFile} with the demo data 🎀`
-    : `${dbFile} already has data, nothing was changed.`,
-);
+if (created) {
+  console.log(`Seeded ${dbFile} with the demo data 🎀`);
+} else if (updated > 0) {
+  console.log(`${dbFile} already had data. Added photos to ${updated} demo products 📸`);
+} else {
+  console.log(`${dbFile} already has data, nothing was changed.`);
+}
