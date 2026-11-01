@@ -426,7 +426,7 @@ These are the inputs most likely to break the app for a real user that the spec 
 - [x] **Step 6:** Run `npm test`. Expected: FAIL (cannot find `createApp`).
 - [x] **Step 7: Implement** `createApp`, `routes/index.js` (`GET /` → `homeController.show`), a minimal `layout.ejs` and `home.ejs`, and `server.js` (reads `PORT` and `DB_FILE`, logs `Blush & Bow 🎀 running at http://localhost:3000`).
 - [x] **Step 8:** Run `npm test`. Expected: PASS. Then run `npm run dev` and open http://localhost:3000.
-- [ ] **Step 9: Commit and push**
+- [x] **Step 9: Commit and push**
   ```bash
   git add . && git commit -m "chore: project skeleton (Express 5 + EJS MVC)" && git push -u origin main
   ```
@@ -470,7 +470,7 @@ These are the inputs most likely to break the app for a real user that the spec 
   - Delivery methods: Standard courier (1599 cents, "2–3 business days"), Express courier (2499, "24 hours"), Locker pickup (999, "1–2 days"). Every product allows at least Standard courier.
   - Every product has 2–4 specs, stock between 0 and 30 (include one at 0 and one at 2), and `image_path = NULL` so the emoji placeholder shows.
 - [x] **Step 5:** Run `npm test`. Expected: PASS. Then run `npm run seed` and open `data/shop.db` in SQLite Viewer.
-- [ ] **Step 6: Commit:** `feat: SQLite schema, migration and demo seed`
+- [x] **Step 6: Commit:** `feat: SQLite schema, migration and demo seed`
 
 ### Task 3: Pink layout, design system and error pages
 
@@ -486,12 +486,12 @@ These are the inputs most likely to break the app for a real user that the spec 
   - `errorHandler(err, req, res, next)`. An `AppError` renders with `err.status` and `err.message`. Anything else logs and renders 500 "Something went wrong 💔".
   - Every view receives `res.locals.currentUser` (null for now), `cartCount = 0` and `wishlistCount = 0`. Task 4 fills them in.
 
-- [ ] **Step 1: Write the failing test:** `GET /does-not-exist` returns 404 and the text contains `Page not found`.
-- [ ] **Step 2:** Run `npm test`. Expected: FAIL (Express's default 404 page).
-- [ ] **Step 3: Implement** the middleware and the layout (header, flash area, `<main>`, footer), and the home hero from §4. The category "bubbles" (emoji circles) and the "New arrivals" grid of the 8 newest products are added in Task 7, once the models exist.
-- [ ] **Step 4:** Run `npm test`. Expected: PASS.
-- [ ] **Step 5: Visual check** in the browser at 375 px and 1280 px (DevTools device toolbar). Expected: no horizontal scroll, a visible focus ring when you Tab, and a soft lift on card hover.
-- [ ] **Step 6: Commit:** `feat: pink design system, layout and error pages`
+- [x] **Step 1: Write the failing test:** `GET /does-not-exist` returns 404 and the text contains `Page not found`.
+- [x] **Step 2:** Run `npm test`. Expected: FAIL (Express's default 404 page).
+- [x] **Step 3: Implement** the middleware and the layout (header, flash area, `<main>`, footer), and the home hero from §4. The category "bubbles" (emoji circles) and the "New arrivals" grid of the 8 newest products are added in Task 7, once the models exist.
+- [x] **Step 4:** Run `npm test`. Expected: PASS.
+- [x] **Step 5: Visual check** in the browser at 375 px and 1280 px (DevTools device toolbar). Expected: no horizontal scroll, a visible focus ring when you Tab, and a soft lift on card hover.
+- [x] **Step 6: Commit:** `feat: pink design system, layout and error pages`
 
 ### Task 4: Authentication and roles (admin / client)
 
@@ -511,7 +511,7 @@ These are the inputs most likely to break the app for a real user that the spec 
   - `requireAdmin`. A guest is handled exactly like `requireLogin` (redirect with `next`). A client gets 403 "This area is for admins only 🔒".
   - `safeNext(next) → string`. It returns `next` only if it starts with `/` and not `//`; otherwise `/`.
 
-- [ ] **Step 1: Write the failing tests** in `tests/auth.test.js`:
+- [x] **Step 1: Write the failing tests** in `tests/auth.test.js`:
   ```js
   // register → 302 to '/', then GET '/' contains 'Hi, Carla'
   // register with ana@test.local → 409, page contains 'An account with this email already exists.'
@@ -524,10 +524,10 @@ These are the inputs most likely to break the app for a real user that the spec 
   // POST /logout → 302 '/', then GET /admin → 302 to login
   // the password is stored as a bcrypt hash: users.password_hash starts with '$2'
   ```
-- [ ] **Step 2:** Run `npm test`. Expected: FAIL.
-- [ ] **Step 3: Implement** the model, controller, middleware and views. Call `req.session.regenerate()` on login to prevent session fixation. The header shows "Hi, {name}", plus an "Admin" link when the user is an admin, and "Log out".
-- [ ] **Step 4:** Run `npm test`. Expected: PASS.
-- [ ] **Step 5: Commit:** `feat: login/register/logout with admin and client roles`
+- [x] **Step 2:** Run `npm test`. Expected: FAIL.
+- [x] **Step 3: Implement** the model, controller, middleware and views. Call `req.session.regenerate()` on login to prevent session fixation. The header shows "Hi, {name}", plus an "Admin" link when the user is an admin, and "Log out".
+- [x] **Step 4:** Run `npm test`. Expected: PASS.
+- [x] **Step 5: Commit:** `feat: login/register/logout with admin and client roles`
 
 ### Task 5: Admin — categories, suppliers and delivery methods
 
@@ -544,7 +544,7 @@ These are the inputs most likely to break the app for a real user that the spec 
   - Each `delete*` throws `AppError('This … is used by products and cannot be deleted.', 409)` when products use the row (catch `SQLITE_CONSTRAINT_FOREIGNKEY`). A duplicate name throws a 409 `AppError`.
   - `createLookupController(config) → { list, newForm, create, editForm, update, remove }`. Here `config = { basePath, title, emoji, model, fields: [{ name, label, type: 'text'|'money'|'emoji'|'textarea', required }] }`. The controller handles all 3 entities with the 2 generic views.
 
-- [ ] **Step 1: Write the failing tests:**
+- [x] **Step 1: Write the failing tests:**
   ```js
   // admin creates category { name: 'Jewelry', emoji: '💍' } → 302 to /admin/categories, flash 'Category saved ✨', slug 'jewelry'
   // admin edits a delivery method price to '19.99' → stored price_cents 1999
@@ -553,10 +553,10 @@ These are the inputs most likely to break the app for a real user that the spec 
   // creating a duplicate category name → 409
   // ana POST /admin/categories → 403 and no row created
   ```
-- [ ] **Step 2:** Run `npm test`. Expected: FAIL.
-- [ ] **Step 3: Implement** the models, the generic controller and the views. The list is a striped table with ✏️ Edit / 🗑️ Delete buttons, and `public/js/main.js` asks "Are you sure you want to delete this?" before submitting a delete.
-- [ ] **Step 4:** Run `npm test`. Expected: PASS.
-- [ ] **Step 5: Commit:** `feat: admin CRUD for categories, suppliers, delivery methods`
+- [x] **Step 2:** Run `npm test`. Expected: FAIL.
+- [x] **Step 3: Implement** the models, the generic controller and the views. The list is a striped table with ✏️ Edit / 🗑️ Delete buttons, and `public/js/main.js` asks "Are you sure you want to delete this?" before submitting a delete.
+- [x] **Step 4:** Run `npm test`. Expected: PASS.
+- [x] **Step 5: Commit:** `feat: admin CRUD for categories, suppliers, delivery methods`
 
 ### Task 6: Admin — products CRUD (all 8 fields + image)
 
@@ -575,13 +575,13 @@ These are the inputs most likely to break the app for a real user that the spec 
   - `getProductById(db, id) → ProductDetail | undefined`. `ProductDetail = { id, name, slug, description, specs, priceCents, stock, imagePath, category: { id, name, slug, emoji }, supplier: { id, name }, deliveryMethods: [{ id, name, priceCents, eta }] }`
   - `productImageUpload`: multer `single('image')`, saved to `uploadsDir` with a random name. It accepts only `image/jpeg`, `image/png` and `image/webp`, up to 2 MB. Anything else gives a 422 field error "The image must be a JPG, PNG or WEBP file, max 2 MB."
 
-- [ ] **Step 1: Write the failing unit tests** in `tests/utils.test.js`:
+- [x] **Step 1: Write the failing unit tests** in `tests/utils.test.js`:
   ```js
   assert.deepEqual(parseSpecs('Material: satin\n\nColor:  pale pink '), [
     { key: 'Material', value: 'satin' }, { key: 'Color', value: 'pale pink' }]);
   assert.throws(() => parseSpecs('Material satin'), { status: 422, message: /Line 1/ });
   ```
-- [ ] **Step 2: Write the failing route tests** in `tests/admin-products.test.js`:
+- [x] **Step 2: Write the failing route tests** in `tests/admin-products.test.js`:
   ```js
   // admin creates a product with every field (price '24.50', stock '7', specs, 2 delivery methods, a small PNG)
   //   → 302, and getProductById returns priceCents 2450, stock 7, 2 specs, 2 deliveryMethods, imagePath starting '/uploads/'
@@ -595,10 +595,10 @@ These are the inputs most likely to break the app for a real user that the spec 
   // ana POST /admin/products → 403
   ```
   (For the delete test, insert the past order directly with SQL in the test. `placeOrder` comes later, in Task 10.)
-- [ ] **Step 3:** Run `npm test`. Expected: FAIL.
-- [ ] **Step 4: Implement.** The form groups fields in pink cards: "Basic info", "Price & stock", "Category & supplier", "Delivery" (checkboxes), "Specifications" (a textarea with the placeholder `Material: satin`), and "Image" (with a preview). The admin list shows a thumbnail or emoji, the name, the price, and the stock with a ⚠️ butter pill when stock is below 5.
-- [ ] **Step 5:** Run `npm test`. Expected: PASS.
-- [ ] **Step 6: Commit:** `feat: admin product CRUD with specs, delivery methods and image upload`
+- [x] **Step 3:** Run `npm test`. Expected: FAIL.
+- [x] **Step 4: Implement.** The form groups fields in pink cards: "Basic info", "Price & stock", "Category & supplier", "Delivery" (checkboxes), "Specifications" (a textarea with the placeholder `Material: satin`), and "Image" (with a preview). The admin list shows a thumbnail or emoji, the name, the price, and the stock with a ⚠️ butter pill when stock is below 5.
+- [x] **Step 5:** Run `npm test`. Expected: PASS.
+- [x] **Step 6: Commit:** `feat: admin product CRUD with specs, delivery methods and image upload`
 
 ### Task 7: Browsing products and categories (public catalog)
 
@@ -612,7 +612,7 @@ These are the inputs most likely to break the app for a real user that the spec 
   - `listProducts(db, { categorySlug, q, sort = 'newest', page = 1, perPage = 12 }) → { items: ProductCard[], total, page, pages }`. `sort` is one of `newest | price_asc | price_desc | name`; an unknown value falls back to `newest`. `q` is run through `normalizeForSearch`, `%`, `_` and `\` are escaped, and it's matched with `search_text LIKE '%' || ? || '%' ESCAPE '\'` as a bound parameter. `ProductCard = { id, name, slug, priceCents, stock, imagePath, category: { name, slug, emoji } }`
   - `getProductBySlug(db, slug) → ProductDetail | undefined`
 
-- [ ] **Step 1: Write the failing tests:**
+- [x] **Step 1: Write the failing tests:**
   ```js
   // GET / → contains 'New arrivals', the category bubbles 'Stationery' and 'Accessories', and 'Heart Pen'
   // GET /products → 200, shows all 4 fixture products
@@ -625,13 +625,13 @@ These are the inputs most likely to break the app for a real user that the spec 
   // GET /products/bow-hair-clips → contains 'Out of stock' and NO 'Add to cart' button
   // GET /products?q=%25 (a literal %) → 200 and does NOT list every product (escape % and _ with ESCAPE '\')
   ```
-- [ ] **Step 2:** Run `npm test`. Expected: FAIL.
-- [ ] **Step 3: Implement.**
+- [x] **Step 2:** Run `npm test`. Expected: FAIL.
+- [x] **Step 3: Implement.**
   - The home page gets its category bubbles (`listCategories`) and the "New arrivals" grid (`listProducts({ sort: 'newest', perPage: 8 })`).
   - The catalog page has category pills along the top (the active one is filled `--rose-700`), a search box, a sort select, a responsive card grid (`grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))`) and pagination.
   - The product page has the image on the left. On the right: the name, the price, a stock pill ("In stock" mint / "Only 2 left!" butter / "Out of stock" cherry), a specs table, the supplier, delivery chips with prices, and placeholder ♡ and "Add to cart" buttons (they start working in Tasks 8–9).
-- [ ] **Step 4:** Run `npm test`. Expected: PASS.
-- [ ] **Step 5: Commit:** `feat: public catalog with categories, search, sort and product page`
+- [x] **Step 4:** Run `npm test`. Expected: PASS.
+- [x] **Step 5: Commit:** `feat: public catalog with categories, search, sort and product page`
 
 ### Task M1: Milestone 1 — presentation (40% of the project grade)
 
